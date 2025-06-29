@@ -1,72 +1,61 @@
-:root {
-  --main-color: #eee;
-  --second-color: #ffbfcb;
-  --day-size: 100px;
-  --font-size: 30px;
-  --gap: 1px;
-  --columns: 7;
-  --calendar-padding: 10px;
-}
+$daySize: 100px;
+$countDays: 31;
+$gapValue: 1px;
+$padding: 10px;
+$calendarWidth: $daySize * 7 + $gapValue * 6 + $padding * 2;
+$daysOfWeek: ('mon' 0, 'tue' 1, 'wed' 2, 'thu' 3, 'fri' 4, 'sat' 5, 'sun' 6);
+$startDay: 'sun';
 
 body {
-  margin: 0;
+  height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: var(--font-size);
+  font-size: 30px;
+  margin: 0;
 }
 
 .calendar {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gap);
-
-  position: relative;
-  width: 726px;
   box-sizing: border-box;
-  padding: 10px;
+  padding: $padding;
+  gap: $gapValue;
+  width: $calendarWidth;
+
+  &__day {
+    display: none;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    background-color: #eee;
+    border: 1px solid black;
+    height: $daySize;
+    width: $daySize;
+
+    &:hover {
+      cursor: pointer;
+      background-color: #ffbfcd;
+      transition: all 0.5s;
+      transform: translateY(-20px);
+    }
+  }
 }
 
 @for $i from 1 through 31 {
+  .calendar--month-length-#{$i} > .calendar__day:nth-child(-n + #{$i}) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .calendar__day:nth-child(#{$i})::before {
     content: '#{$i}';
   }
 }
 
-.calendar__day {
-  position: relative;
-  width: var(--day-size);
-  height: var(--day-size);
-  border: 1px solid black;
-  box-sizing: border-box;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.5s;
-  background-color: var(--main-color);
-
-  &:hover {
-    cursor: pointer;
-    background-color: var(--second-color);
-    border: 1px solid var(--main-color);
-    transform: translateY(-20px);
+@each $day, $offset in $daysOfWeek {
+  .calendar--start-day-#{$day} > .calendar__day:first-child {
+    margin-left: calc(($offset * 100px) + (1px * $offset));
   }
-
-  &::before {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: flex;
-    text-align: center;
-    justify-content: center;
-    transform: translate(-50%, -50%);
-    font-size: var(--font-size);
-  }
-}
-
-.calendar__day--sun {
-  margin-left: 606px;
 }
